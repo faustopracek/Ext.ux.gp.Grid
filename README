@@ -4,23 +4,26 @@ Ext.gp.Grid (gpgrid)
 
 This component extends mitchellsimoens Ext.ux.touch.grid and it can display a filter toolbar with a search field for each column.
 
-
+-----------------------
 GENERAL CONFIG OPTIONS:
 -----------------------
 
-*** showFilterRow: Boolean ***
-If it is true it enables filter row in grid. (Defualt value: false)
-
-*** filterRowDelay:Number ***
-The milliseconds waiting before new value in filter field is applied. (Defualt value: 1000)
-
+*** defaultFilterRowFieldType: String ***
+ The default filter field value type. (Defualt value: 'string')
 
 *** disableFilterRowActions: Boolean ***
 If it is true the store filter action doesn't start after filter fields are changed. but fire 'filter' event only. (Defualt value: false)
 
 
-*** defaultFilterRowFieldType: String ***
- The default filter field value type. (Defualt value: 'string')
+*** filterRowDelay:Number ***
+The milliseconds waiting before new value in filter field is applied. (Defualt value: 1000)
+
+
+*** showFilterRow: Boolean ***
+If it is true it enables filter row in grid. (Defualt value: false)
+
+*** showFilterRowPaging: Boolean ***
+If it is true in FilterRow Toolbar it is possible to have "Back" and "Forward" buttons for store paging
 
 COLUMN CONFIG OPTIONS:
 *** filterRowFieldHidden: Boolean ***
@@ -29,18 +32,22 @@ If it is true the filter field for this column is hidden. (Defualt value: false)
 *** filterRowFieldType    : Object ***
 Filter field value type for this column. For example: { type : 'date' } (Defualt value: defaultFilterRowFieldType)
 
+--------
 METHODS:
 --------
 
 *** clearAllFilterFields([Boolean disableApplyFilter]) ***
 It clears all filter fields. If disableApplyFilter is true the store filter doesn't change. Default disableApplyFilter value is false.
 
-*** setFilterFieldValue(String dataIndex,[Object fieldValue],[Boolean disableApplyFilter]) ***
-It sets a specific filter field (by its dataIndex property) to a specifi value. If disableApplyFilter is true the store filter doesn't change. Default disableApplyFilter value is false.
 
 *** getFilterFieldValue(String dataIndex) ***
 It returns the filter field value by its dataIndex property.
 
+*** setFilterFieldValue(String dataIndex,[Object fieldValue],[Boolean disableApplyFilter]) ***
+It sets a specific filter field (by its dataIndex property) to a specifi value. If disableApplyFilter is true the store filter doesn't change. Default disableApplyFilter value is false.
+
+
+-------
 EVENTS:
 -------
 *** filter(Ext.Component this, Object grid, Ext.data.Store store, Object[] filtersArray) ***
