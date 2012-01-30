@@ -331,7 +331,6 @@ Ext.define('Ext.gp.Grid', {
     clearAllFilterFields:function(disableApplyFilter){
         var filterRowCell=Ext.ComponentQuery.query('*[gpGridFilterField='+this.getId()+']'); 
         for (c=0; c < filterRowCell.length; c++) {
-            console.log(filterRowCell[c].fieldName);
             this.setFilterFieldValue(filterRowCell[c].fieldName, null,true)
         }
         if(disableApplyFilter==undefined){
