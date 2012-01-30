@@ -7,7 +7,6 @@ This component extends mitchellsimoens Ext.ux.touch.grid and it can display a fi
 -----------------------
 GENERAL CONFIG OPTIONS:
 -----------------------
-
 *** defaultFilterRowFieldType: String ***
  The default filter field value type. (Defualt value: 'string')
 
@@ -25,7 +24,9 @@ If it is true it enables filter row in grid. (Defualt value: false)
 *** showFilterRowPaging: Boolean ***
 If it is true in FilterRow Toolbar it is possible to have "Back" and "Forward" buttons for store paging
 
+----------------------
 COLUMN CONFIG OPTIONS:
+----------------------
 *** filterRowFieldHidden: Boolean ***
 If it is true the filter field for this column is hidden. (Defualt value: false)
 
@@ -35,7 +36,6 @@ Filter field value type for this column. For example: { type : 'date' } (Defualt
 --------
 METHODS:
 --------
-
 *** clearAllFilterFields([Boolean disableApplyFilter]) ***
 It clears all filter fields. If disableApplyFilter is true the store filter doesn't change. Default disableApplyFilter value is false.
 
@@ -45,7 +45,6 @@ It returns the filter field value by its dataIndex property.
 
 *** setFilterFieldValue(String dataIndex,[Object fieldValue],[Boolean disableApplyFilter]) ***
 It sets a specific filter field (by its dataIndex property) to a specifi value. If disableApplyFilter is true the store filter doesn't change. Default disableApplyFilter value is false.
-
 
 -------
 EVENTS:
