@@ -47,10 +47,49 @@ It returns the filter field value by its dataIndex property.
 It sets a specific filter field (by its dataIndex property) to a specifi value. If disableApplyFilter is true the store filter doesn't change. Default disableApplyFilter value is false.
 
 *** storeLoad(Ext.data.Store/Object store) ***
-It loads store and refresh paging. To be use with custom filtering (when disableFilterRowActions is false and the filter is created in 'filter' event).
+It loads store and refresh paging. To be use with custom filtering (when disableFilterRowActions is true and the filter is created in 'filter' event).
 
 -------
 EVENTS:
 -------
 *** filter(Ext.Component this, Object grid, Ext.data.Store store, Object[] filtersArray) ***
 It fires when the store filters property is changed.
+
+
+
+**********************
+CUSTOM FILTER EXAMPLE:
+**********************
+
+{
+	xtype:'gpgrid',
+	scope:this,
+	showFilterRow:true,
+	showFilterRowPaging:true,
+	disableFilterRowActions:true,
+	pagingBarDocking:'bottom',
+	store      : null,
+	listeners : {
+               		filter: function(sender, grid, store, filtersArray){
+        				var where="";
+        				var c=0;
+        				for (; c < filtersArray.length; c++){
+              					where=where+" AND [anagra].["+filtersArray[c].property+"] LIKE '"+filtersArray[c].value+"%'";
+        				}
+        				grid.storeLoad(myCurrentSqlString+where);
+    				}
+                                    
+        },
+	columns   : [
+			{
+				header    : 'Code',
+				dataIndex : 'an_code',
+                                width     : '20%'
+                        },
+                        {
+                                header    : 'Description',
+                                dataIndex : 'an_descr',
+                                width     : '80%'
+                        }
+                    ]
+}
