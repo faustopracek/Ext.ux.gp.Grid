@@ -1,4 +1,4 @@
-Ext.define('Ext.gp.Grid', {
+Ext.define('Ext.ux.gp.Grid', {
     extend   : 'Ext.ux.touch.grid.View',
     xtype    : 'gpgrid',
     showFilterRowPaging:false,
@@ -44,7 +44,7 @@ Ext.define('Ext.gp.Grid', {
         for (c=0; c < filterRowCell.length; c++) {
             
             var elem = new Ext.Element(filterRowCell[c]);
-            elem.update('');
+            elem.setHtml('');
             if(elem.getAttribute('hidden')!="true"&&elem.getAttribute('gridid')==this.getId()){ 
                 var fieldHeight=parseInt(e.element.dom.offsetHeight*70/100)+'px';
                 var dataIndex = elem.getAttribute('dataindex');
@@ -216,6 +216,7 @@ Ext.define('Ext.gp.Grid', {
            return;
         }
         
+        if (this.showFilterRowPaging==true) {
         var total         = grid.store.getTotalCount(),
             currentPage   = grid.store.currentPage,
             pages         = Math.ceil(total / grid.store.getPageSize()),
@@ -225,6 +226,7 @@ Ext.define('Ext.gp.Grid', {
 
         backButton.setDisabled(currentPage == 1);
         forwardButton.setDisabled(currentPage == pages);
+        }
     },
     _buildFields: function(columns,filterRow) {
 
