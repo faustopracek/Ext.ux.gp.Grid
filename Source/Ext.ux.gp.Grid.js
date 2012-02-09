@@ -187,7 +187,9 @@ Ext.define('Ext.ux.gp.Grid', {
     },
     _applyFilter:function(){ 
         var store     = this.getStore();
-        
+        if(store.isLoading()){
+            return;
+        }
         var filterRowCell=Ext.ComponentQuery.query('*[gpGridFilterField='+this.getId()+']'); 
         filtersArray=[];
         for (c=0; c < filterRowCell.length; c++) {
@@ -212,17 +214,16 @@ Ext.define('Ext.ux.gp.Grid', {
         var me    = this
         grid.store = grid.getStore();
         grid.store.on('load', '_handleGridPaint', this);
-        if (grid.store.isLoading()) { //if(Ext.data.Connection.isLoading()){    
+        if (grid.store.isLoading()) { 
            return;
         }
-        
         if (this.showFilterRowPaging==true) {
-        var total         = grid.store.getTotalCount(),
+            var total         = grid.store.getTotalCount(),
             currentPage   = grid.store.currentPage,
             pages         = Math.ceil(total / grid.store.getPageSize()),
             backButton    = Ext.ComponentQuery.query('button[gpGridFilterBackBtn='+this.getId()+']')[0],
             forwardButton = Ext.ComponentQuery.query('button[gpGridFilterForwardBtn='+this.getId()+']')[0]
-            console.log();
+            console.log(total);
 
         backButton.setDisabled(currentPage == 1);
         forwardButton.setDisabled(currentPage == pages);
@@ -341,5 +342,10 @@ Ext.define('Ext.ux.gp.Grid', {
         if(!disableApplyFilter){
             this._applyFilter();
         }
+    },
+    storeLoad:function(store){
+        this.setStore(store);
+        this.getStore().load();
+        this._handleGridPaint(this.grid);
     }
 });

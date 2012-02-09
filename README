@@ -46,6 +46,9 @@ It returns the filter field value by its dataIndex property.
 *** setFilterFieldValue(String dataIndex,[Object fieldValue],[Boolean disableApplyFilter]) ***
 It sets a specific filter field (by its dataIndex property) to a specifi value. If disableApplyFilter is true the store filter doesn't change. Default disableApplyFilter value is false.
 
+*** storeLoad(Ext.data.Store/Object store) ***
+It loads store and refresh paging. To be use with custom filtering (when disableFilterRowActions is false and the filter is created in 'filter' event).
+
 -------
 EVENTS:
 -------
