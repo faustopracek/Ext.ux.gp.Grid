@@ -223,10 +223,8 @@ Ext.define('Ext.ux.gp.Grid', {
             pages         = Math.ceil(total / grid.store.getPageSize()),
             backButton    = Ext.ComponentQuery.query('button[gpGridFilterBackBtn='+this.getId()+']')[0],
             forwardButton = Ext.ComponentQuery.query('button[gpGridFilterForwardBtn='+this.getId()+']')[0]
-            console.log(total);
-
-        backButton.setDisabled(currentPage == 1);
-        forwardButton.setDisabled(currentPage == pages);
+            backButton.setDisabled(currentPage == 1);
+            forwardButton.setDisabled(currentPage == pages);
         }
     },
     _buildFields: function(columns,filterRow) {
