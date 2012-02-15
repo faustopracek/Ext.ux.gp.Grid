@@ -10,8 +10,15 @@ Ext.define('Ext.ux.gp.Grid', {
     constructor: function(config) {
         var me=this;
         var columns = config.columns || me.config.columns || me.columns;
-        me.callParent(arguments);
         
+        me.callParent(arguments);
+        Ext.apply(config, {
+            useComponents : true,
+            itemConfig:Ext.create('Ext.Button',{text:'Fausto'})//this.config.itemTpl
+        });
+        /*var element=new Ext.dom.Element();
+        element.appendChild(Ext.getHtml('this.config.itemTpl.html'));
+        console.log(element);*/
         if(config.showFilterRow==true){
             filterRowToolbar= Ext.create('Ext.Toolbar',{
                 scope:this,
@@ -39,8 +46,7 @@ Ext.define('Ext.ux.gp.Grid', {
     _filterRowToolbarPainted : function (e) {
         this._buildFields(this.getColumns(),e);
 
-        var filterRowCell=Ext.query("div.x-grid-filterrow-cell");
-
+        var filterRowCell=this.element.query("div.x-grid-filterrow-cell");
         for (c=0; c < filterRowCell.length; c++) {
             
             var elem = new Ext.Element(filterRowCell[c]);
@@ -54,25 +60,26 @@ Ext.define('Ext.ux.gp.Grid', {
                 if(filterType=='date'){ 
                     fieldType='Ext.field.DatePicker'; 
                     pickerDate=Ext.create('Ext.picker.Date'); 
-                    pickerDate.gpGridId=this.getId();
+                    //pickerDate.gpGridId=this.getId();
+                    pickerDate.gpScope=this;
                     pickerDate.on('show', 
                         function(sender){ 
                             if(sender.down('toolbar button[text=Reset]')==undefined){ 
                                 var resetButton=Ext.create('Ext.Button',{
                                     text:'Reset',
-                                    scope:Ext.ComponentQuery.query('datepickerfield[fieldName='+dataIndex+'][gpGridFilterField='+this.gpGridId+']')[0],
+                                    scope:Ext.ComponentQuery.query('datepickerfield[fieldName='+dataIndex+'][gpGridFilterField='+this.gpScope.getId()+']')[0],
                                     align:'left',
                                     dataIndex:dataIndex
                                 }); 
                                 resetButton.on('tap',function(sender){
                                     this.hide();
-                                    parentPanel=Ext.ComponentQuery.query('datepickerfield[fieldName='+sender.dataIndex+'][gpGridFilterField='+this.gpGridId+']')[0].parent;
-                                    parentPanel.remove(Ext.ComponentQuery.query('datepickerfield[fieldName='+sender.dataIndex+'][gpGridFilterField='+this.gpGridId+']')[0]);
+                                    parentPanel=Ext.ComponentQuery.query('datepickerfield[fieldName='+sender.dataIndex+'][gpGridFilterField='+this.gpScope.getId()+']')[0].parent;
+                                    parentPanel.remove(Ext.ComponentQuery.query('datepickerfield[fieldName='+sender.dataIndex+'][gpGridFilterField='+this.gpScope.getId()+']')[0]);
                                     
                                     dateField=Ext.create('Ext.field.DatePicker', { 
                                             flex:1,
                                             placeHolder:'Filter...',
-                                            gpGridFilterField:this.gpGridId, 
+                                            gpGridFilterField:this.gpScope.getId(), 
                                             gpGridFilterFieldType:filterType, 
                                             height       : fieldHeight,
                                             fieldName:dataIndex
@@ -89,9 +96,10 @@ Ext.define('Ext.ux.gp.Grid', {
                     ); 
                     
                 } 
-                
+                //console.log(elem);
+                //console.log(elem.getWidth());
                 var filterField=Ext.create(fieldType, { 
-                                        flex:1,
+                                        //flex:1,
                                         picker: pickerDate, 
                                         placeHolder:'Filter...',
                                         gpGridFilterField:this.getId(), 
@@ -99,6 +107,7 @@ Ext.define('Ext.ux.gp.Grid', {
                                         height       : fieldHeight,
                                         fieldName:dataIndex
                 });
+                filterField.on('resize',this._resizeFilters,this);
                 if(elem.getAttribute('filter')=='date'){ 
                     filterField.on('change',this._applyFilter,this); 
                 } 
@@ -109,8 +118,8 @@ Ext.define('Ext.ux.gp.Grid', {
                 panel = Ext.create('Ext.Panel', {
                         renderTo     : elem,
                         scope:this,
-                        flex:1,
-                        layout:{ type: 'hbox'},
+                        //flex:1,
+                        layout:{ type: 'hbox'}
                         
                 });
                 
@@ -138,29 +147,30 @@ Ext.define('Ext.ux.gp.Grid', {
                         handler  : '_handleForwardButton'
                     });
                     panel.add(btnForward);
-            }
+                }
                 if (parentPanel=Ext.ComponentQuery.query('datepickerfield[fieldName='+dataIndex+'][gpGridFilterField='+this.getId()+']')[0]!=undefined){ 
                     Ext.ComponentQuery.query('datepickerfield[fieldName='+dataIndex+'][gpGridFilterField='+this.getId()+']')[0].parent.on('add',function(){ 
                         
                         pickerDate=Ext.create('Ext.picker.Date');
-                        pickerDate.gpGridId=this.scope.getId();
+                        //pickerDate.gpGridId=this.scope.getId();
+                        pickerDate.gpScope=this.scope;
                         pickerDate.on('show', 
                             function(sender){ 
                                 if(sender.down('toolbar button[text=Reset]')==undefined){ 
-                                    var resetButton=Ext.create('Ext.Button',{text:'Reset',scope:Ext.ComponentQuery.query('datepickerfield[fieldName='+dataIndex+'][gpGridFilterField='+this.gpGridId+']')[0],align:'left',dataIndex:dataIndex}); 
+                                    var resetButton=Ext.create('Ext.Button',{text:'Reset',scope:Ext.ComponentQuery.query('datepickerfield[fieldName='+dataIndex+'][gpGridFilterField='+this.gpScope.getId()+']')[0],align:'left',dataIndex:dataIndex}); 
                                     resetButton.on('tap',function(sender){
                                         this.hide();
-                                        parentPanel=Ext.ComponentQuery.query('datepickerfield[fieldName='+sender.dataIndex+'][gpGridFilterField='+this.gpGridId+']')[0].parent;
-                                        parentPanel.remove(Ext.ComponentQuery.query('datepickerfield[fieldName='+sender.dataIndex+'][gpGridFilterField='+this.gpGridId+']')[0]);
+                                        parentPanel=Ext.ComponentQuery.query('datepickerfield[fieldName='+sender.dataIndex+'][gpGridFilterField='+this.gpScope.getId()+']')[0].parent;
+                                        parentPanel.remove(Ext.ComponentQuery.query('datepickerfield[fieldName='+sender.dataIndex+'][gpGridFilterField='+this.gpScope.getId()+']')[0]);
                                         dateField=Ext.create('Ext.field.DatePicker', { 
                                                 flex:1,
                                                 placeHolder:'Filter...',
-                                                gpGridFilterField:this.gpGridId, 
+                                                gpGridFilterField:this.gpScope.getId(), 
                                                 gpGridFilterFieldType:filterType, 
                                                 height       : fieldHeight,
                                                 fieldName:dataIndex
                                         }); 
-                                        
+                                        dateField.on('resize',this.gpScope._resizeFilters,this);
                                         parentPanel.add(
                                             dateField
                                         );
@@ -180,6 +190,27 @@ Ext.define('Ext.ux.gp.Grid', {
             } 
             
         }
+        this._resizeFilters();
+    },
+    _resizeFilters:function(){
+        var backBtn=Ext.ComponentQuery.query('button[gpGridFilterBackBtn='+this.getId()+']')[0];
+        var forwardBtn=Ext.ComponentQuery.query('button[gpGridFilterForwardBtn='+this.getId()+']')[0];
+
+        
+        var cells=this.element.query("div.x-grid-filterrow-cell");
+        for (c=0; c < cells.length; c++) {
+            var backOffset=0;
+            var forwardOffset=0;
+            if(c==0&&backBtn!=undefined){
+                backOffset=backBtn.element.getWidth()+10;
+            }
+            if(c==cells.length-1&&forwardBtn!=undefined){
+                forwardOffset=forwardBtn.element.getWidth()+10;
+            }
+            var elem = new Ext.Element(cells[c]);
+            Ext.ComponentQuery.query('*[fieldName='+elem.getAttribute('dataindex')+'][gpGridFilterField='+this.getId()+']')[0].setWidth(elem.getWidth()-20-backOffset-forwardOffset);
+        }
+        
     },
     _filterFieldClearIconTap:function(sender){
         sender.setValue('');
@@ -266,6 +297,11 @@ Ext.define('Ext.ux.gp.Grid', {
                         attributes.push('style ="display        : inline-block;    overflow       : hidden;    text-overflow  : ellipsis;   white-space    : nowrap;    vertical-align : middle;    line-height    : 2.5em; font-size      : 1em;   font-weight    : bold;padding-left:0em;padding-right:0em;' + styles.join(' ') + '"');
                     }
                     tpl.push('<div class="' + css.join(' ') + '" ' + attributes.join('') + '>' + innerText + '</div>');
+                    if(column.buttons!=undefined&&column.buttons!=null){
+                        
+
+                       
+                    }
                 }
                 tpl = tpl.join('');
                 
@@ -315,6 +351,7 @@ Ext.define('Ext.ux.gp.Grid', {
                     height       : fieldHeight,
                     fieldName:dataIndex
             });
+            dateField.on('resize',this._resizeFilters,this);
             parentPanel.add(
                 dateField
             );
